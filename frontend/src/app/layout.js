@@ -1,5 +1,13 @@
+"use client";
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/Navbar";
+import { Toaster } from "react-hot-toast";
+import { Loader } from "lucide-react";
+import { useAuthStore } from "@/useAuthStore";
+import { useThemeStore } from "@/useThemeStore";
+import { useEffect } from "react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,12 +25,32 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { theme } = useThemeStore();
+
+  useEffect(() => {
+    checkAuth();
+    // eslint-disable-next-line
+  }, []);
+
+  if (isCheckingAuth && !authUser) {
+    return (
+      <html lang="en">
+        <body>
+          <div className="flex items-center justify-center h-screen">
+            <Loader className="size-10 animate-spin" />
+          </div>
+        </body>
+      </html>
+    );
+  }
+
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="en" data-theme={theme}>
+      <body>
+        <Navbar />
         {children}
+        <Toaster />
       </body>
     </html>
   );
