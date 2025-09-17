@@ -5,7 +5,7 @@ import { io } from "socket.io-client";
 
 const BASE_URL =
   process.env.NODE_ENV === "development"
-    ? "http://localhost:5001"
+    ? "https://vigilant-barnacle-9v5jw46p6qxcjvx-3000.app.github.dev/"
     : process.env.NEXT_PUBLIC_BASE_URL || "/";
 
 export const useAuthStore = create((set, get) => ({

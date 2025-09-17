@@ -1,6 +1,7 @@
 'use client';
 
-import { THEMES } from '@/constants'; // Adjust if not using path aliases
+import { THEMES } from '@/Constants';
+// import { THEMES } from '@/constants'; // Adjust if not using path aliases
 import { useThemeStore } from '@/store/useThemeStore'; // Adjust path
 import { Send } from 'lucide-react';
 

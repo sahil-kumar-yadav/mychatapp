@@ -2,7 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
-import { useThemeStore } from "@/store/useThemeStore";
+import ThemeProvider from "@/utils/ThemeProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,15 +20,14 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
-  // const { theme } = useThemeStore();
-
   return (
-    <html lang="en" data-theme={theme}>
+    <html lang="en" suppressHydrationWarning>
       <body>
-        <Navbar />
-        {children}
-        <Toaster />
+        <ThemeProvider>
+          <Navbar />
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );
