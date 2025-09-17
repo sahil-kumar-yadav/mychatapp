@@ -1,12 +1,13 @@
 "use client";
 
 import { useChatStore } from "@/store/useChatStore";
-import Sidebar from "@/components/Sidebar";
-import NoChatSelected from "@/components/NoChatSelected";
-import ChatContainer from "@/components/ChatContainer";
 import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+
+import Sidebar from "@/components/Sidebar";
+import NoChatSelected from "@/components/NoChatSelected";
+import ChatContainer from "@/components/ChatContainer";
 
 export default function Home() {
   const { selectedUser } = useChatStore();
@@ -14,16 +15,19 @@ export default function Home() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
 
+  // Ensure the component only runs on the client
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Redirect to login if user is not authenticated
   useEffect(() => {
     if (mounted && !authUser) {
       router.replace("/login");
     }
   }, [mounted, authUser, router]);
 
+  // Wait for mount and auth check to complete
   if (!mounted || !authUser) return null;
 
   return (

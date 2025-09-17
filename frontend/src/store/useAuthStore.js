@@ -3,7 +3,10 @@ import { axiosInstance } from "../lib/axios.js";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
-const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
+const BASE_URL =
+  process.env.NODE_ENV === "development"
+    ? "http://localhost:5001"
+    : process.env.NEXT_PUBLIC_BASE_URL || "/";
 
 export const useAuthStore = create((set, get) => ({
   authUser: null,
@@ -36,7 +39,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully");
       get().connectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
     }
@@ -51,7 +54,7 @@ export const useAuthStore = create((set, get) => ({
 
       get().connectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
     }
@@ -64,7 +67,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Logged out successfully");
       get().disconnectSocket();
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Logout failed");
     }
   },
 
@@ -76,30 +79,35 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Profile updated successfully");
     } catch (error) {
       console.log("error in update profile:", error);
-      toast.error(error.response.data.message);
+      toast.error(error?.response?.data?.message || "Update profile failed");
     } finally {
       set({ isUpdatingProfile: false });
     }
   },
 
   connectSocket: () => {
-    const { authUser } = get();
-    if (!authUser || get().socket?.connected) return;
+    const { authUser, socket } = get();
+    if (!authUser || socket?.connected) return;
 
-    const socket = io(BASE_URL, {
+    // Make sure socket.io-client runs only in the browser
+    if (typeof window === "undefined") return;
+
+    const socketInstance = io(BASE_URL, {
       query: {
         userId: authUser._id,
       },
     });
-    socket.connect();
+    socketInstance.connect();
 
-    set({ socket: socket });
+    set({ socket: socketInstance });
 
-    socket.on("getOnlineUsers", (userIds) => {
+    socketInstance.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
   },
+
   disconnectSocket: () => {
-    if (get().socket?.connected) get().socket.disconnect();
+    const { socket } = get();
+    if (socket?.connected) socket.disconnect();
   },
 }));
