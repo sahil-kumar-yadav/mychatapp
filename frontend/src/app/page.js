@@ -1,10 +1,10 @@
 "use client";
 
-import { useChatStore } from "@/useChatStore";
+import { useChatStore } from "@/store/useChatStore";
 import Sidebar from "@/components/Sidebar";
 import NoChatSelected from "@/components/NoChatSelected";
 import ChatContainer from "@/components/ChatContainer";
-import { useAuthStore } from "@/useAuthStore";
+import { useAuthStore } from "@/store/useAuthStore";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 

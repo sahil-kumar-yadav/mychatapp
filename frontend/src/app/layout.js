@@ -5,8 +5,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
-import { useAuthStore } from "@/useAuthStore";
-import { useThemeStore } from "@/useThemeStore";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useThemeStore } from "@/store/useThemeStore";
 import { useEffect } from "react";
 
 const geistSans = Geist({
